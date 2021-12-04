@@ -1,0 +1,25 @@
+version: '2'
+services:
+  trivy:
+    image: aquasec/trivy:latest
+    entrypoint: ""
+    working_dir: /src
+    network_mode: host
+    volumes:
+      - cache:/root/.cache/
+      - .:/src
+  anybadge:
+    image: registry.gitlab.com/fixl/docker-anybadge:latest
+    entrypoint: ""
+    working_dir: /src
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - .:/src
+  drawio:
+    image: drawio-desktop-headless
+    entrypoint: ""
+    working_dir: /src
+    volumes:
+    - .:/src
+volumes:
+  cache:

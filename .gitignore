@@ -1,0 +1,6 @@
+gitlab.tpl
+gl-container-scanning-report.json
+go.*
+output
+*.tar
+public/
