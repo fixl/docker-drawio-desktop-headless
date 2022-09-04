@@ -13,9 +13,10 @@ CI_PIPELINE_URL ?= local
 TAG = $(DRAWIO_DESKTOP_VERSION)
 
 EXTRACTED_FILE = extracted.tar
+DOCKER_BUILDKIT = 1
 
-TRIVY_COMMAND = docker-compose run --rm trivy
-ANYBADGE_COMMAND = docker-compose run --rm anybadge
+TRIVY_COMMAND = docker compose run --rm trivy
+ANYBADGE_COMMAND = docker compose run --rm anybadge
 
 DRAWIO_RUN_COMMAND = docker-compose run --rm drawio
 
@@ -29,6 +30,7 @@ DOCKERHUB_IMAGE_PATCH = $(DOCKERHUB_IMAGE):$(PATCH)
 
 build:
 	docker build \
+		--progress=plain \
 		--pull \
 		--build-arg DRAWIO_DESKTOP_VERSION=$(DRAWIO_DESKTOP_VERSION) \
 		--label "org.opencontainers.image.title=$(IMAGE_NAME)" \
