@@ -18,7 +18,7 @@ DOCKER_BUILDKIT = 1
 TRIVY_COMMAND = docker compose run --rm trivy
 ANYBADGE_COMMAND = docker compose run --rm anybadge
 
-DRAWIO_RUN_COMMAND = docker-compose run --rm drawio
+DRAWIO_RUN_COMMAND = docker compose run --rm drawio
 
 # Computed
 PATCH = $(DRAWIO_DESKTOP_VERSION)
@@ -58,7 +58,7 @@ shell:
 scan: $(EXTRACTED_FILE)
 	if [ ! -f gitlab.tpl ] ; then curl --output gitlab.tpl https://raw.githubusercontent.com/aquasecurity/trivy/master/contrib/gitlab.tpl;  fi
 
-	docker-compose pull trivy
+	docker compose pull trivy
 	$(TRIVY_COMMAND) trivy image --clear-cache
 	$(TRIVY_COMMAND) trivy image --input $(EXTRACTED_FILE) --exit-code 0 --no-progress --format template --template "@gitlab.tpl" -o gl-container-scanning-report.json $(IMAGE_NAME)
 	$(TRIVY_COMMAND) trivy image --input $(EXTRACTED_FILE) --exit-code 1 --no-progress --ignore-unfixed --severity CRITICAL $(IMAGE_NAME)

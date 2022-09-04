@@ -1,7 +1,7 @@
 ARG DRAWIO_DESKTOP_VERSION
 FROM rlespinasse/drawio-desktop-headless:${DRAWIO_DESKTOP_VERSION}
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get dist-upgrade -y && apt-get install -y \
         make \
         bash \
         inotify-tools \
