@@ -29,9 +29,10 @@ DOCKERHUB_IMAGE_LATEST = $(DOCKERHUB_IMAGE)
 DOCKERHUB_IMAGE_PATCH = $(DOCKERHUB_IMAGE):$(PATCH)
 
 build:
-	docker build \
+	docker buildx build \
 		--progress=plain \
 		--pull \
+		--load \
 		--build-arg DRAWIO_DESKTOP_VERSION=$(DRAWIO_DESKTOP_VERSION) \
 		--label "org.opencontainers.image.title=$(IMAGE_NAME)" \
 		--label "org.opencontainers.image.url=https://github.com/rlespinasse/docker-drawio-desktop-headless" \
