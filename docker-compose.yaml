@@ -21,5 +21,7 @@ services:
     working_dir: /src
     volumes:
     - .:/src
+    shm_size: 128mb
+
 volumes:
   cache:

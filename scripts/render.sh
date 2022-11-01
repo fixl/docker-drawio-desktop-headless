@@ -83,7 +83,7 @@ function render() {
     fi
 
     echo -n "Rendering "
-    timeout "${DRAWIO_DESKTOP_COMMAND_TIMEOUT}" "${DRAWIO_DESKTOP_RUNNER_COMMAND_LINE}" --export --format ${TYPE} --output ${OUTPUT_FILENAME} ${FILE}
+    timeout "${DRAWIO_DESKTOP_COMMAND_TIMEOUT}" "${DRAWIO_DESKTOP_RUNNER_COMMAND_LINE}" --export --format ${TYPE} --output ${OUTPUT_FILENAME} ${FILE} || true
 }
 
 # Start framebuffer and make sure its cleaned up after each run
@@ -107,5 +107,3 @@ echo "Watching files in ${BASE_DIRECTORY}"
 # Workaround because inotifywait doesn't behave on docker for mac
 export ENTR_INOTIFY_WORKAROUND="yes"
 find ${BASE_DIRECTORY} -type f -name "*.drawio" | entr -r -p render /_ "${TYPE}" "false" "${OUTPUT_DIR}"
-
-
