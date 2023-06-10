@@ -7,7 +7,10 @@ RUN apt-get update && apt-get dist-upgrade -y && apt-get install -y \
         inotify-tools \
         entr \
         parallel \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    # For when user/group is set to non-root id
+    && mkdir /.pki \
+    && chmod 777 /.pki
 
 COPY scripts/render.sh /usr/local/bin/render
 
