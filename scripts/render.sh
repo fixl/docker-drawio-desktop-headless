@@ -86,6 +86,9 @@ function render() {
     timeout "${DRAWIO_DESKTOP_COMMAND_TIMEOUT}" "${DRAWIO_DESKTOP_RUNNER_COMMAND_LINE}" --export --format ${TYPE} --output ${OUTPUT_FILENAME} ${FILE} || true
 }
 
+# clean lock files
+find / -name "*-lock" -type f -exec rm {} \; 2> /dev/null || true
+
 # Start framebuffer and make sure its cleaned up after each run
 export DISPLAY="${XVFB_DISPLAY}"
 Xvfb "${XVFB_DISPLAY}" ${XVFB_OPTIONS} &
