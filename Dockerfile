@@ -9,8 +9,8 @@ RUN apt-get update && apt-get dist-upgrade -y && apt-get install -y \
         parallel \
     && rm -rf /var/lib/apt/lists/* \
     # For when user/group is set to non-root id
-    && mkdir /.pki \
-    && chmod 777 /.pki
+    && mkdir -p /.pki /.cache \
+    && chmod 777 /.pki /.cache
 
 COPY scripts/render.sh /usr/local/bin/render
 
