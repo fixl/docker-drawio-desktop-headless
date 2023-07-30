@@ -64,6 +64,12 @@ else
     BASE_DIRECTORY=$(cd ${BASE_DIRECTORY} &&pwd)
 fi
 
+# Prepare output cleaning
+touch "${DRAWIO_DESKTOP_SOURCE_FOLDER:?}/unwanted-lines.txt"
+if [[ "${ELECTRON_DISABLE_SECURITY_WARNINGS:?}" == "true" ]]; then
+  cat "${DRAWIO_DESKTOP_SOURCE_FOLDER:?}/unwanted-security-warnings.txt" >>"${DRAWIO_DESKTOP_SOURCE_FOLDER:?}/unwanted-lines.txt"
+fi
+
 function render() {
     FILE=${1}
     TYPE=${2}
@@ -83,7 +89,7 @@ function render() {
     fi
 
     echo -n "Rendering "
-    timeout "${DRAWIO_DESKTOP_COMMAND_TIMEOUT}" "${DRAWIO_DESKTOP_RUNNER_COMMAND_LINE}" --export --format ${TYPE} --output ${OUTPUT_FILENAME} ${FILE} || true
+    timeout "${DRAWIO_DESKTOP_COMMAND_TIMEOUT}" "${DRAWIO_DESKTOP_SOURCE_FOLDER:?}/runner_wrapper.sh" --export --format ${TYPE} --output ${OUTPUT_FILENAME} ${FILE} || true
 }
 
 # clean lock files
