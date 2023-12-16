@@ -57,7 +57,7 @@ shell:
 	$(DRAWIO_RUN_COMMAND) bash
 
 scan: $(EXTRACTED_FILE)
-	if [ ! -f gitlab.tpl ] ; then curl --output gitlab.tpl https://raw.githubusercontent.com/aquasecurity/trivy/master/contrib/gitlab.tpl;  fi
+	if [ ! -f gitlab.tpl ] ; then curl --output gitlab.tpl https://raw.githubusercontent.com/aquasecurity/trivy/v$(shell docker compose run --rm trivy sh -c "trivy version" | grep Version | head -n1 | awk '{print $$2}')/contrib/gitlab.tpl;  fi
 
 	docker compose pull trivy
 	$(TRIVY_COMMAND) trivy image --clear-cache
