@@ -10,7 +10,7 @@ RUN apt-get update && apt-get dist-upgrade -y && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* \
     # For when user/group is set to non-root id
     && mkdir -p /.pki /.cache \
-    && chmod 777 /.pki /.cache
+    && chmod 777 /.pki /.cache ${DRAWIO_DESKTOP_SOURCE_FOLDER}
 
 COPY scripts/render.sh /usr/local/bin/render
 
