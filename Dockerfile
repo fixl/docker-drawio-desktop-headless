@@ -16,7 +16,7 @@ COPY scripts/render.sh /usr/local/bin/render
 
 RUN chmod +x /usr/local/bin/render
 
-ENV XVFB_OPTIONS "-nolisten tcp -nolisten unix"
-ENV XDG_CONFIG_HOME "/tmp/.config"
+ENV XVFB_OPTIONS="-nolisten tcp -nolisten unix"
+ENV XDG_CONFIG_HOME="/tmp/.config"
 
 WORKDIR "/src"

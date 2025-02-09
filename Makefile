@@ -1,4 +1,4 @@
-DRAWIO_DESKTOP_VERSION = 1.24.0
+DRAWIO_DESKTOP_VERSION = 1.39.0
 
 IMAGE_NAME ?= drawio-desktop-headless
 DOCKERHUB_IMAGE ?= fixl/$(IMAGE_NAME)
@@ -57,10 +57,10 @@ shell:
 	$(DRAWIO_RUN_COMMAND) bash
 
 scan: $(EXTRACTED_FILE)
+	docker compose pull trivy
 	if [ ! -f gitlab.tpl ] ; then curl --output gitlab.tpl https://raw.githubusercontent.com/aquasecurity/trivy/v$(shell docker compose run --rm trivy sh -c "trivy version" | grep Version | head -n1 | awk '{print $$2}')/contrib/gitlab.tpl;  fi
 
-	docker compose pull trivy
-	$(TRIVY_COMMAND) trivy image --clear-cache
+	$(TRIVY_COMMAND) trivy clean --scan-cache
 	$(TRIVY_COMMAND) trivy image --input $(EXTRACTED_FILE) --exit-code 0 --no-progress --format template --template "@gitlab.tpl" -o gl-container-scanning-report.json $(IMAGE_NAME)
 	$(TRIVY_COMMAND) trivy image --input $(EXTRACTED_FILE) --exit-code 1 --no-progress --ignore-unfixed --severity CRITICAL $(IMAGE_NAME)
 
