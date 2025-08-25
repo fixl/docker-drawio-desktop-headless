@@ -1,4 +1,4 @@
-DRAWIO_DESKTOP_VERSION = 1.42.0
+DRAWIO_DESKTOP_VERSION = 1.47.0
 
 IMAGE_NAME ?= drawio-desktop-headless
 DOCKERHUB_IMAGE ?= fixl/$(IMAGE_NAME)
@@ -17,6 +17,7 @@ DOCKER_BUILDKIT = 1
 
 TRIVY_COMMAND = docker compose run --rm trivy
 ANYBADGE_COMMAND = docker compose run --rm anybadge
+BINFMT_COMMAND = docker compose run --rm binfmt
 
 DRAWIO_RUN_COMMAND = docker compose run --rm drawio
 
@@ -28,8 +29,16 @@ GITHUB_IMAGE_PATCH = $(GITHUB_IMAGE):$(PATCH)
 DOCKERHUB_IMAGE_LATEST = $(DOCKERHUB_IMAGE)
 DOCKERHUB_IMAGE_PATCH = $(DOCKERHUB_IMAGE):$(PATCH)
 
+# Export variables for child processes
+.EXPORT_ALL_VARIABLES:
+
+/proc/sys/fs/binfmt_misc/qemu-aarch64:
+	$(BINFMT_COMMAND) --install arm64
+	-docker buildx create --use --name drawio
+
 build:
 	docker buildx build \
+		--platform linux/amd64 \
 		--progress=plain \
 		--pull \
 		--load \
@@ -43,6 +52,27 @@ build:
 		--label "org.opencontainers.image.revision=$(COMMIT_SHA)" \
 		--label "info.fixl.github.run-url=$(RUN_URL)" \
 		--tag $(IMAGE_NAME) \
+		--tag $(GITHUB_IMAGE_LATEST) \
+		--tag $(GITHUB_IMAGE_PATCH) \
+		--tag $(DOCKERHUB_IMAGE_LATEST) \
+		--tag $(DOCKERHUB_IMAGE_PATCH) \
+		.
+
+publish: /proc/sys/fs/binfmt_misc/qemu-aarch64
+	docker buildx build \
+		--platform linux/arm64,linux/amd64 \
+		--progress=plain \
+		--pull \
+		--push \
+		--build-arg DRAWIO_DESKTOP_VERSION=$(DRAWIO_DESKTOP_VERSION) \
+		--label "org.opencontainers.image.title=$(IMAGE_NAME)" \
+		--label "org.opencontainers.image.url=https://github.com/rlespinasse/docker-drawio-desktop-headless" \
+		--label "org.opencontainers.image.authors=@fixl" \
+		--label "org.opencontainers.image.version=$(DRAWIO_DESKTOP_VERSION)" \
+		--label "org.opencontainers.image.created=$(BUILD_DATE)" \
+		--label "org.opencontainers.image.source=$(PROJECT_URL)" \
+		--label "org.opencontainers.image.revision=$(COMMIT_SHA)" \
+		--label "info.fixl.github.run-url=$(RUN_URL)" \
 		--tag $(GITHUB_IMAGE_LATEST) \
 		--tag $(GITHUB_IMAGE_PATCH) \
 		--tag $(DOCKERHUB_IMAGE_LATEST) \
@@ -71,14 +101,6 @@ badges:
 	$(ANYBADGE_COMMAND) docker-size $(DOCKERHUB_IMAGE_PATCH) public/size
 	$(ANYBADGE_COMMAND) docker-version $(DOCKERHUB_IMAGE_PATCH) public/version
 
-publishDockerhub:
-	docker push $(DOCKERHUB_IMAGE_LATEST)
-	docker push $(DOCKERHUB_IMAGE_PATCH)
-
-publishGitlab:
-	docker push $(GITHUB_IMAGE_LATEST)
-	docker push $(GITHUB_IMAGE_PATCH)
-
 gitRelease:
 	-git tag -d $(TAG)
 	-git push origin :refs/tags/$(TAG)
@@ -88,6 +110,9 @@ gitRelease:
 
 clean:
 	$(TRIVY_COMMAND) rm -rf public/ *.tar *.sarif
+	-$(BINFMT_COMMAND) --uninstall qemu-aarch64
+	-docker buildx prune --force --all
+	-docker buildx rm drawio
 	-docker rmi $(IMAGE_NAME)
 	-docker rmi $(GITHUB_IMAGE_LATEST)
 	-docker rmi $(GITHUB_IMAGE_PATCH)
