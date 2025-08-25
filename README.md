@@ -1,15 +1,15 @@
 # Draw.io Desktop Headless Image
 
-[![pipeline status](https://gitlab.com/fixl/docker-drawio-desktop-headless/badges/master/pipeline.svg)](https://gitlab.com/fixl/docker-drawio-desktop-headless/-/pipelines)
-[![version](https://fixl.gitlab.io/docker-drawio-desktop-headless/version.svg)](https://gitlab.com/fixl/docker-drawio-desktop-headless/-/commits/master)
-[![size](https://fixl.gitlab.io/docker-drawio-desktop-headless/size.svg)](https://gitlab.com/fixl/docker-drawio-desktop-headless/-/commits/master)
+[![Build Container](https://github.com/fixl/docker-drawio-desktop-headless/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/fixl/docker-drawio-desktop-headless/actions/workflows/build.yml)
+[![version](https://fixl.github.io/docker-drawio-desktop-headless/version.svg)](https://github.com/fixl/docker-drawio-desktop-headless/commits/main/)
+[![size](https://fixl.github.io/docker-drawio-desktop-headless/size.svg)](https://github.com/fixl/docker-drawio-desktop-headless/commits/main/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/fixl/drawio-desktop-headless)](https://hub.docker.com/r/fixl/drawio-desktop-headless)
 [![Docker Stars](https://img.shields.io/docker/stars/fixl/drawio-desktop-headless)](https://hub.docker.com/r/fixl/drawio-desktop-headless)
 
 A Docker container based on [docker-drawio-desktop-headless](https://github.com/rlespinasse/docker-drawio-desktop-headless) with
 extra scripts for convenience.
 
-This image can be used with [3 Musketeers](https://3musketeers.io/).
+This image can be used with [3 Musketeers](https://3musketeers.pages.dev/).
 
 ## Build the image
 
